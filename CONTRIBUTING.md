@@ -17,6 +17,22 @@ Load the folder as an unpacked extension (`chrome://extensions` → Developer mo
 → Load unpacked) and reload it there after each change. Content script changes
 also need a Gmail refresh.
 
+## If you touch manifest.json
+
+Chrome only reports manifest errors when it loads the extension, and some of its
+rules are surprising — `web_accessible_resources.matches` must be a host-level
+pattern ending in `/*`, even though `content_scripts.matches` may narrow the
+path. `test/manifest.test.js` covers the rules that have bitten us, and you can
+ask Chrome itself to validate before loading:
+
+```bash
+# macOS; adjust the path on other platforms
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --pack-extension="$PWD" --no-message-box
+```
+
+Silence means the manifest parsed. Delete the generated `.crx` and `.pem`.
+
 ## Before you open a pull request
 
 - `npm test` passes.

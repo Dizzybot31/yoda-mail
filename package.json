@@ -1,6 +1,6 @@
 {
   "name": "yoda-mail",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "description": "A Chrome extension that reads your Gmail aloud in Yoda's voice.",
   "scripts": {

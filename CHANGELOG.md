@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.1 — 2026-09-11
+
+### Fixed
+
+- **The extension would not load at all.** `web_accessible_resources[0].matches`
+  was narrowed to `https://mail.google.com/mail/*`. Chrome requires a host-level
+  pattern there — unlike `content_scripts.matches`, the path cannot be
+  restricted — so Chrome rejected the manifest with "Invalid match pattern" and
+  refused to install 1.1.0.
+
+Added `test/manifest.test.js`, which checks the match-pattern rule, that every
+file the manifest references exists, that content scripts are listed in
+dependency order, and that no unused permission creeps back in.
+
 ## 1.1.0 — 2026-09-11
 
 First public release. The extension was rewritten from a single 460-line content
