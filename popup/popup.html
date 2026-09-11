@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Yoda Mail</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="scanlines"></div>
+
+  <div class="header">
+    <img class="sprite" src="../icons/icon48.png" alt="" width="48" height="48" />
+    <div class="title-block">
+      <div class="title">YODA MAIL</div>
+      <div class="subtitle">▶ READ YOUR EMAILS,<br />&nbsp;&nbsp;YODA WILL.</div>
+    </div>
+  </div>
+
+  <div class="divider">▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄</div>
+
+  <div class="section">
+    <label class="label" for="speechRate">SPEED <span class="val" id="rateVal"></span></label>
+    <div class="slider-row">
+      <span class="sl-cap">▐</span>
+      <input type="range" id="speechRate" min="0.60" max="1.30" step="0.02" />
+      <span class="sl-cap">▌</span>
+    </div>
+    <div class="hint">SLOW ◀──────────────▶ FAST</div>
+  </div>
+
+  <div class="section">
+    <label class="label" for="voiceName">VOICE</label>
+    <select id="voiceName"></select>
+    <div class="hint" id="voiceHint">★ MACOS: SYSTEM SETTINGS →<br />ACCESSIBILITY → SPOKEN CONTENT<br />→ MANAGE → ADD "SUPERSTAR"</div>
+  </div>
+
+  <div class="section">
+    <label class="toggle-row" for="chimeEnabled">
+      <input type="checkbox" id="chimeEnabled" />
+      <span class="label">NEW MAIL CHIME</span>
+    </label>
+    <div class="hint">OFF = YODA SPEAKS ONLY<br />FOR MAIL YOU OPEN.</div>
+  </div>
+
+  <div class="button-row">
+    <button id="test" class="secondary">▶ TEST VOICE</button>
+    <button id="reset" class="secondary">⟳ RESET HEAD</button>
+  </div>
+
+  <button id="save">▶ SAVE CONFIG</button>
+  <p id="status" role="status"></p>
+
+  <div class="footer">INSERT COIN TO CONTINUE</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+/* Yoda Mail — popup.
+ *
+ * No webfont here either: the old popup pulled Press Start 2P from Google Fonts
+ * on every open, which leaked a request and looked broken offline. If the font
+ * happens to be installed locally it is used; otherwise a monospace stack keeps
+ * the terminal feel. Sizes are tuned for the fallback, which renders larger.
+ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  width: 300px;
+  background: #0a0a14;
+  color: #4ecca3;
+  font-family: 'Press Start 2P', ui-monospace, 'SF Mono', Menlo, 'Courier New', monospace;
+  font-size: 10px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+  image-rendering: pixelated;
+}
+
+/* CRT scanlines overlay */
+.scanlines {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.22) 3px,
+    rgba(0, 0, 0, 0.22) 4px
+  );
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* ── Header ────────────────────────────────────────────────────────────────── */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.sprite {
+  flex-shrink: 0;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 6px rgba(78, 204, 163, 0.5));
+}
+
+.title {
+  font-size: 14px;
+  color: #4ecca3;
+  text-shadow: 2px 2px 0 #000, 0 0 12px rgba(78, 204, 163, 0.53);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 8px;
+  color: #2a8866;
+  line-height: 1.8;
+}
+
+/* ── Divider ───────────────────────────────────────────────────────────────── */
+
+.divider {
+  font-size: 7px;
+  color: #1a4433;
+  letter-spacing: -1px;
+  margin: 10px 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* ── Sections ──────────────────────────────────────────────────────────────── */
+
+.section { margin-bottom: 14px; }
+
+.label {
+  font-size: 9px;
+  color: #2a8866;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.val {
+  color: #4ecca3;
+  text-shadow: 0 0 6px #4ecca3;
+}
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sl-cap {
+  color: #4ecca3;
+  font-size: 11px;
+}
+
+input[type='range'] {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  background: #060610;
+  outline: 2px solid #1a4433;
+  cursor: pointer;
+  image-rendering: pixelated;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 16px;
+  background: #4ecca3;
+  box-shadow: 1px 1px 0 #000, -1px -1px 0 rgba(255, 255, 255, 0.3) inset;
+  cursor: pointer;
+  image-rendering: pixelated;
+}
+
+input[type='range']:focus-visible { outline-color: #4ecca3; }
+
+select {
+  width: 100%;
+  padding: 7px 6px;
+  background: #060610;
+  color: #4ecca3;
+  border: none;
+  outline: 2px solid #1a4433;
+  font-family: inherit;
+  font-size: 9px;
+  cursor: pointer;
+}
+
+select:focus-visible { outline-color: #4ecca3; }
+
+/* ── Chime toggle ──────────────────────────────────────────────────────────── */
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.toggle-row .label { margin-bottom: 0; }
+
+input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #060610;
+  outline: 2px solid #1a4433;
+  cursor: pointer;
+  flex-shrink: 0;
+  image-rendering: pixelated;
+}
+
+input[type='checkbox']:checked {
+  background: #4ecca3;
+  box-shadow: inset 0 0 0 2px #0a0a14, 0 0 8px rgba(78, 204, 163, 0.6);
+}
+
+input[type='checkbox']:focus-visible { outline-color: #4ecca3; }
+
+.hint {
+  font-size: 7px;
+  color: #1a4433;
+  margin-top: 5px;
+  letter-spacing: 0.5px;
+  line-height: 1.8;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────────── */
+
+button {
+  display: block;
+  width: 100%;
+  padding: 12px 8px;
+  background: #4ecca3;
+  color: #0a0a14;
+  border: none;
+  font-family: inherit;
+  font-size: 10px;
+  cursor: pointer;
+  image-rendering: pixelated;
+  box-shadow: 3px 3px 0 #000, -1px -1px 0 rgba(255, 255, 255, 0.3) inset;
+  transition: transform 0.05s steps(1), box-shadow 0.05s steps(1);
+}
+
+button:hover { background: #7fffda; }
+
+button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #000;
+}
+
+button:focus-visible { outline: 2px solid #7fffda; outline-offset: 3px; }
+
+.button-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+button.secondary {
+  background: #060610;
+  color: #4ecca3;
+  outline: 2px solid #1a4433;
+  outline-offset: -2px;
+  font-size: 8px;
+  padding: 9px 4px;
+  box-shadow: 2px 2px 0 #000;
+}
+
+button.secondary:hover {
+  background: #0f1a16;
+  outline-color: #4ecca3;
+}
+
+/* ── Status ────────────────────────────────────────────────────────────────── */
+
+#status {
+  margin-top: 10px;
+  min-height: 16px;
+  font-size: 8px;
+  text-align: center;
+  line-height: 1.8;
+}
+
+#status.success { color: #4ecca3; text-shadow: 0 0 6px #4ecca3; }
+#status.error { color: #ff4444; text-shadow: 0 0 6px #ff4444; }
+
+/* ── Footer ────────────────────────────────────────────────────────────────── */
+
+.footer {
+  margin-top: 14px;
+  font-size: 7px;
+  color: #1a4433;
+  text-align: center;
+  letter-spacing: 1px;
+  animation: blink-footer 1.2s steps(1) infinite;
+}
+
+@keyframes blink-footer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer { animation: none; }
+}

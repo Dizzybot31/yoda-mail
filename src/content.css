@@ -1,0 +1,211 @@
+/* Yoda Mail — the floating head, its force rings and the toast.
+ *
+ * No webfont: v1.0.0 injected a Google Fonts <link> into Gmail, which is both a
+ * third-party request on every page and something Gmail's CSP can refuse. A
+ * monospace stack gets the same retro feel with nothing to load.
+ */
+
+:root {
+  --ym-green: #4ecca3;
+  --ym-green-bright: #00ffcc;
+  --ym-magenta: #ff4cff;
+  --ym-ink: #0a0a14;
+}
+
+#yoda-mail-fab {
+  position: fixed;
+  /* JS sets left/top; these only matter for the first paint. */
+  right: 24px;
+  bottom: 64px;
+  z-index: 2147483000; /* above Gmail, below a genuinely modal browser UI */
+  width: 72px;
+  height: 72px;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none; /* let the pointer handlers own the gesture */
+  display: block;
+}
+
+#yoda-mail-fab.dragging {
+  cursor: grabbing;
+}
+
+#yoda-mail-fab:focus-visible {
+  outline: 2px solid var(--ym-green-bright);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+/* ── Force pulse rings ─────────────────────────────────────────────────────
+   Three concentric rings that expand and fade while Yoda speaks. They sit
+   behind the head and never take pointer events.
+─────────────────────────────────────────────────────────────────────────── */
+
+.ym-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  border: 2.5px solid var(--ym-green);
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#yoda-mail-fab[data-state='speaking'] .ym-ring:nth-child(1) { animation: ym-ring 2s ease-out infinite 0s; }
+#yoda-mail-fab[data-state='speaking'] .ym-ring:nth-child(2) { animation: ym-ring 2s ease-out infinite 0.66s; }
+#yoda-mail-fab[data-state='speaking'] .ym-ring:nth-child(3) { animation: ym-ring 2s ease-out infinite 1.33s; }
+
+@keyframes ym-ring {
+  0% {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0.85;
+    border-color: var(--ym-green);
+    border-width: 3px;
+  }
+  60% { border-color: var(--ym-green-bright); }
+  100% {
+    transform: translate(-50%, -50%) scale(3.2);
+    opacity: 0;
+    border-color: rgba(78, 204, 163, 0.13);
+    border-width: 1px;
+  }
+}
+
+/* ── Head ─────────────────────────────────────────────────────────────────── */
+
+#yoda-head,
+.ym-emoji {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 72px;
+  height: 72px;
+  pointer-events: none; /* the container handles the gestures */
+  image-rendering: pixelated; /* keep the sprite crisp */
+  filter: drop-shadow(0 4px 10px rgba(78, 204, 163, 0.45));
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.ym-emoji {
+  display: none;
+  font-size: 56px;
+  line-height: 72px;
+  text-align: center;
+}
+
+#yoda-mail-fab:hover #yoda-head,
+#yoda-mail-fab:hover .ym-emoji {
+  transform: translateY(-3px) scale(1.06);
+  filter: drop-shadow(0 6px 18px rgba(78, 204, 163, 0.75));
+}
+
+#yoda-mail-fab[data-state='speaking'] #yoda-head,
+#yoda-mail-fab[data-state='speaking'] .ym-emoji {
+  animation: ym-bob 0.75s ease-in-out infinite;
+  filter: drop-shadow(0 4px 14px rgba(78, 204, 163, 0.6));
+}
+
+#yoda-mail-fab[data-state='loading'] #yoda-head,
+#yoda-mail-fab[data-state='loading'] .ym-emoji {
+  animation: ym-wobble 0.5s ease-in-out infinite;
+  opacity: 0.75;
+}
+
+#yoda-head.bobbing,
+.ym-emoji.bobbing {
+  animation: ym-bounce 0.35s ease-out 3 !important;
+}
+
+@keyframes ym-bob {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-7px) rotate(4deg); }
+}
+
+@keyframes ym-wobble {
+  0%, 100% { transform: rotate(-7deg); }
+  50% { transform: rotate(7deg); }
+}
+
+@keyframes ym-bounce {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(-12px); }
+  70% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ym-ring,
+  #yoda-head,
+  .ym-emoji {
+    animation: none !important;
+  }
+}
+
+/* ── Label ────────────────────────────────────────────────────────────────── */
+
+.ym-label {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 4px;
+  z-index: 1;
+  font-family: 'Press Start 2P', ui-monospace, 'SF Mono', Menlo, 'Courier New', monospace;
+  font-size: 8px;
+  letter-spacing: 0.5px;
+  color: var(--ym-green);
+  text-shadow: 1px 1px 0 #000;
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+  background: rgba(10, 10, 20, 0.82);
+  padding: 3px 6px;
+  outline: 1px solid rgba(78, 204, 163, 0.27);
+}
+
+#yoda-mail-fab:hover .ym-label,
+#yoda-mail-fab:focus-visible .ym-label,
+#yoda-mail-fab[data-state='speaking'] .ym-label,
+#yoda-mail-fab[data-state='loading'] .ym-label {
+  opacity: 1;
+}
+
+#yoda-mail-fab[data-state='speaking'] .ym-label {
+  color: var(--ym-magenta);
+  outline-color: rgba(255, 76, 255, 0.27);
+}
+
+/* ── Toast ────────────────────────────────────────────────────────────────── */
+
+#yoda-mail-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2147483000;
+  padding: 12px 16px;
+  background: var(--ym-ink);
+  outline: 2px solid var(--ym-green);
+  outline-offset: 2px;
+  box-shadow: 3px 3px 0 #000;
+  color: var(--ym-green);
+  font-family: 'Press Start 2P', ui-monospace, 'SF Mono', Menlo, 'Courier New', monospace;
+  font-size: 9px;
+  line-height: 1.9;
+  white-space: pre;
+  text-align: center;
+  pointer-events: none;
+  animation: ym-fadein 0.1s steps(2);
+}
+
+@keyframes ym-fadein {
+  from { opacity: 0; transform: translate(-50%, 6px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}

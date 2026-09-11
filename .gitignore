@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+._*
+
+# Claude Code local settings (contains machine-specific permissions)
+.claude/
+
+# Build output
+dist/
+*.zip
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Editors
+.vscode/
+.idea/
+*.swp
